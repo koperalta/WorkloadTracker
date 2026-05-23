@@ -1,5 +1,5 @@
 <%-- 
-    Test Dashboard lang ito Boss Carl, Para lang ma-testing ko ang backend logic ko.Nalagay mo yong dashboard.jsp mo dito
+    Test Dashboard lang ito Boss Carl, Para lang ma-test ko ang backend logic. Lagay mo lang ang dashboard.jsp mo dito
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
