@@ -14,9 +14,11 @@
             💡 Active<span>Learning</span>
         </a>
         <div style="font-size: 14px; display: flex; gap: 30px; align-items: center;">
+            
             <span style="color: #ddd; font-weight: normal;">
                 Welcome, <strong style="color: white;"><c:out value="${sessionScope.studentName}" default="Student"/></strong>
             </span>
+
             <a href="${pageContext.request.contextPath}/LogoutServlet" class="btn-logout">Logout</a>
         </div>
     </nav>
@@ -25,8 +27,15 @@
 
         <div class="dashboard-card">
             <h3>My Active Training Tasks</h3>
-            <p style="margin-bottom: 25px; color: #666; font-size: 15px;">View your assigned modules and track your progress.</p>
+            <p style="margin-bottom: 20px; color: #666; font-size: 15px;">View your assigned modules and track your progress.</p>
             
+            <div class="report-actions" style="margin-bottom: 25px;">
+                <form action="${pageContext.request.contextPath}/GenerateReportServlet" method="GET">
+                    <input type="hidden" name="type" value="my_student_tasks">
+                    <button type="submit" class="btn-report">Download My Task Report</button>
+                </form>
+            </div>
+
             <table class="data-table">
                 <thead>
                     <tr>

@@ -39,6 +39,11 @@
                     <input type="hidden" name="type" value="audit_logs">
                     <button type="submit" class="btn-report">Download Full Audit Trail</button>
                 </form>
+
+                <form action="${pageContext.request.contextPath}/GenerateReportServlet" method="GET">
+                    <input type="hidden" name="type" value="my_audit_logs">
+                    <button type="submit" class="btn-report" style="background-color: var(--brand-navy);">Download My Records Only</button>
+                </form>
             </div>
 
             <form action="${pageContext.request.contextPath}/GenerateReportServlet" method="GET" class="time-bound-box">
