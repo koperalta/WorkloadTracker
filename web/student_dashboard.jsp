@@ -13,9 +13,11 @@
         <a href="#" class="logo">
             💡 Active<span>Learning</span>
         </a>
-        <div style="font-size: 14px; display: flex; gap: 20px; align-items: center;">
-            <span>Welcome, <strong>Student</strong></span>
-            <a href="${pageContext.request.contextPath}/LogoutServlet" style="color: var(--brand-orange); text-decoration: none; font-weight: bold;">Logout</a>
+        <div style="font-size: 14px; display: flex; gap: 30px; align-items: center;">
+            <span style="color: #ddd; font-weight: normal;">
+                Welcome, <strong style="color: white;"><c:out value="${sessionScope.studentName}" default="Student"/></strong>
+            </span>
+            <a href="${pageContext.request.contextPath}/LogoutServlet" class="btn-logout">Logout</a>
         </div>
     </nav>
 
@@ -23,7 +25,7 @@
 
         <div class="dashboard-card">
             <h3>My Active Training Tasks</h3>
-            <p style="margin-bottom: 15px; color: #555;">View your assigned modules and track your progress.</p>
+            <p style="margin-bottom: 25px; color: #666; font-size: 15px;">View your assigned modules and track your progress.</p>
             
             <table class="data-table">
                 <thead>
@@ -37,30 +39,30 @@
                 <tbody>
                     <c:forEach var="taskItem" items="${workloadData}">
                         <tr>
-                            <td>MOD-${taskItem.task.moduleId}</td>
-                            <td>${taskItem.task.title}</td>
+                            <td><strong>MOD-${taskItem.task.moduleId}</strong></td>
+                            <td style="color: var(--brand-navy); font-weight: 500;">${taskItem.task.title}</td>
                             <td>
                                 <c:choose>
                                     <c:when test="${taskItem.status == 'Completed'}">
-                                        <span style="color: blue; font-weight: bold;">${taskItem.status}</span>
+                                        <span style="color: #0056b3; font-weight: bold; background: #e6f2ff; padding: 4px 8px; border-radius: 4px; font-size: 13px;">${taskItem.status}</span>
                                     </c:when>
                                     <c:when test="${taskItem.status == 'In Progress'}">
-                                        <span style="color: green; font-weight: bold;">${taskItem.status}</span>
+                                        <span style="color: #1e7e34; font-weight: bold; background: #e6ffed; padding: 4px 8px; border-radius: 4px; font-size: 13px;">${taskItem.status}</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span style="color: orange; font-weight: bold;">${taskItem.status}</span>
+                                        <span style="color: #d39e00; font-weight: bold; background: #fff8e6; padding: 4px 8px; border-radius: 4px; font-size: 13px;">${taskItem.status}</span>
                                     </c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
-                                <button class="btn-submit" style="padding: 5px 10px; font-size: 12px; width: auto;">Log Time</button>
+                                <button class="btn-submit" style="padding: 8px 16px; font-size: 13px;">Log Time</button>
                             </td>
                         </tr>
                     </c:forEach>
                     
                     <c:if test="${empty workloadData}">
                         <tr>
-                            <td colspan="4" style="text-align: center; font-style: italic; color: #888;">You have no active tasks at the moment.</td>
+                            <td colspan="4" style="text-align: center; font-style: italic; color: #888; padding: 40px;">You have no active tasks at the moment. Enjoy your break!</td>
                         </tr>
                     </c:if>
                 </tbody>
