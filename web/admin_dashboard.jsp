@@ -1,150 +1,88 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List"%>
-<%@page import="workloadtracker.TrainingModule"%>
-<%@page import="workloadtracker.Task"%>
-<%@page import="workloadtracker.AuditLog"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Active Learning</title>
-    <!-- Links to your teammate's existing stylesheet -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        /* Supplementary styles specifically for the admin layout tables */
-        .admin-container { 
-            padding: 2% 5%; 
-            font-family: Arial, sans-serif; 
-        }
-        .admin-header { 
-            background-color: #f37021; /* Active Learning Orange */
-            color: white; 
-            padding: 15px 5%; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-        .admin-header h1 { margin: 0; font-size: 1.5em; }
-        .logout-btn { 
-            background-color: white; 
-            color: #f37021; 
-            text-decoration: none; 
-            padding: 8px 15px; 
-            border-radius: 4px; 
-            font-weight: bold; 
-        }
-        .data-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 15px; 
-            background: white; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .data-table th, .data-table td { 
-            border: 1px solid #ddd; 
-            padding: 12px; 
-            text-align: left; 
-        }
-        .data-table th { background-color: #f4f4f4; color: #333; }
-        .section-title { 
-            margin-top: 40px; 
-            border-bottom: 2px solid #f37021; 
-            padding-bottom: 5px; 
-            color: #333;
-        }
-    </style>
+    <title>Admin Dashboard - ActiveLearning</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <div class="admin-header">
-        <h1>💡 Active Learning - Admin Portal</h1>
-        <a href="${pageContext.request.contextPath}/login.jsp" class="logout-btn">Logout</a>
-    </div>
 
-    <div class="admin-container">
-        <!-- Pulls the Admin ID from the session attribute set in your servlet -->
-        <h2>Welcome, Administrator (ID: <%= request.getAttribute("adminId") %>)</h2>
-        <p>This is your secure control panel for curriculum management and immutable audit logs.</p>
+    <nav class="navbar">
+        <a href="#" class="logo">
+            💡 Active<span>Learning</span>
+        </a>
+        <div style="font-size: 14px; display: flex; gap: 20px; align-items: center;">
+            <span style="color: var(--brand-orange); font-weight: bold;">Administrator View</span>
+            <a href="${pageContext.request.contextPath}/LogoutServlet" style="color: var(--brand-dark); text-decoration: none; font-weight: bold;">Logout</a>
+        </div>
+    </nav>
 
-        <!-- Section 1: MySQL Training Modules -->
-        <h3 class="section-title">📚 Your Managed Modules</h3>
-        <table class="data-table">
-            <tr>
-                <th>Module ID</th>
-                <th>Title</th>
-            </tr>
-            <% 
-                // Retrieves the list of modules passed by the AdminDashboardServlet
-                List<TrainingModule> modules = (List<TrainingModule>) request.getAttribute("adminModules");
-                if (modules != null && !modules.isEmpty()) {
-                    for (TrainingModule m : modules) {
-            %>
-            <tr>
-                <td><%= m.getModuleId() %></td>
-                <td><%= m.getTitle() %></td>
-            </tr>
-            <% 
-                    }
-                } else { 
-            %>
-            <tr><td colspan="2">No modules found. Ensure database is populated.</td></tr>
-            <% } %>
-        </table>
+    <div class="dashboard-container">
+        
+        <div class="dashboard-card" style="border-top-color: var(--brand-orange);">
+            <h3>System Report Generation</h3>
+            <p style="margin-bottom: 15px; color: #555;">Download official workload and audit reports from the PostgreSQL Database.</p>
+            
+            <div class="report-actions">
+                <form action="${pageContext.request.contextPath}/GenerateReportServlet" method="GET">
+                    <input type="hidden" name="type" value="all_tasks">
+                    <button type="submit" class="btn-report">Download All User Tasks</button>
+                </form>
 
-        <!-- Section 2: MySQL Tasks -->
-        <h3 class="section-title">📋 Your Managed Tasks</h3>
-        <table class="data-table">
-            <tr>
-                <th>Task ID</th>
-                <th>Module ID</th>
-                <th>Task Title</th>
-            </tr>
-            <% 
-                // Retrieves the list of tasks passed by the AdminDashboardServlet
-                List<Task> tasks = (List<Task>) request.getAttribute("adminTasks");
-                if (tasks != null && !tasks.isEmpty()) {
-                    for (Task t : tasks) {
-            %>
-            <tr>
-                <td><%= t.getTaskId() %></td>
-                <td><%= t.getModuleId() %></td>
-                <td><%= t.getTitle() %></td>
-            </tr>
-            <% 
-                    }
-                } else { 
-            %>
-            <tr><td colspan="3">No tasks found. Ensure database is populated.</td></tr>
-            <% } %>
-        </table>
+                <form action="${pageContext.request.contextPath}/GenerateReportServlet" method="GET">
+                    <input type="hidden" name="type" value="audit_logs">
+                    <button type="submit" class="btn-report">Download Full Audit Trail</button>
+                </form>
+            </div>
 
-        <!-- Section 3: PostgreSQL Audit Logs -->
-        <h3 class="section-title">🔒 PostgreSQL Audit Ledger</h3>
-        <table class="data-table">
-            <tr>
-                <th>Audit ID</th>
-                <th>Action Type</th>
-                <th>Timestamp</th>
-            </tr>
-            <% 
-                // Retrieves the time-series logs passed by the AdminDashboardServlet
-                List<AuditLog> logs = (List<AuditLog>) request.getAttribute("recentLogs");
-                if (logs != null && !logs.isEmpty()) {
-                    for (AuditLog log : logs) {
-            %>
-            <tr>
-                <td><%= log.getAuditId() %></td>
-                <td><%= log.getActionType() %></td>
-                <td><%= log.getActionTimestamp() %></td>
-            </tr>
-            <% 
-                    }
-                } else { 
-            %>
-            <tr><td colspan="3">No recent audit logs available. Try performing an administrative action.</td></tr>
-            <% } %>
-        </table>
+            <form action="${pageContext.request.contextPath}/GenerateReportServlet" method="GET" style="margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 4px; border: 1px dashed #ccc;">
+                <h4 style="margin-bottom: 10px;">Time-Bound Audit Report</h4>
+                <div style="display: flex; gap: 15px; align-items: flex-end;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Start Date</label>
+                        <input type="date" name="startDate" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>End Date</label>
+                        <input type="date" name="endDate" required>
+                    </div>
+                    <button type="submit" class="btn-submit" style="width: auto;">Generate Custom Report</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Recent System Activity (Audit Trail)</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Audit ID</th>
+                        <th>Admin ID</th>
+                        <th>Action Performed</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="log" items="${auditLogsData}">
+                        <tr>
+                            <td>${log.auditId}</td>
+                            <td>Admin ${log.adminId}</td>
+                            <td style="font-family: monospace; color: #333;">${log.actionType}</td>
+                            <td>${log.actionTimestamp}</td>
+                        </tr>
+                    </c:forEach>
+                    
+                    <c:if test="${empty auditLogsData}">
+                        <tr>
+                            <td colspan="4" style="text-align: center; font-style: italic; color: #888;">No recent audit logs found in PostgreSQL.</td>
+                        </tr>
+                    </c:if>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </body>
 </html>
