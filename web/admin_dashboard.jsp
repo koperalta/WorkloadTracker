@@ -31,7 +31,7 @@
             
             <div class="report-actions">
                 <form action="${pageContext.request.contextPath}/GenerateReportServlet" method="GET">
-                    <input type="hidden" name="type" value="all_tasks">
+                    <input type="hidden" name="type" value="all_users">
                     <button type="submit" class="btn-report">Download All User Tasks</button>
                 </form>
 

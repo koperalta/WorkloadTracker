@@ -6,6 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import exception.*;
 import helper.*;
+import java.util.Set;
 
 public class LoginServlet extends HttpServlet {
 
@@ -80,9 +81,10 @@ public class LoginServlet extends HttpServlet {
 
                 // Inside LoginServlet.java
                 if (storedPass.equals(pass)) {
-                    int userId = rs.getInt("USER_ID"); // Retrieve the integer ID
+                    int userId = rs.getInt("USER_ID");
                     HttpSession session = request.getSession();
-                    session.setAttribute("loggedUserId", userId); // Store the Integer
+                    session.setAttribute("loggedUsername", user);
+                    session.setAttribute("loggedUserId", userId);
                     session.setAttribute("loggedUserRoleId", role);
     
                     if(role == 2) //student

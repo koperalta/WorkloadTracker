@@ -11,7 +11,7 @@ public class DecryptPassword {
         String secretKey = "w0Rkl04Dh@$h_keY";
         
         // The ciphertext, with the missing '=' padding appended
-        String cipherText = "QJVeoerT1TIh1LNBO9gxRBALXvY3gAfxIZRw/hoK630";
+        String cipherText = "2sfI4QAqGRhUDM92ZND1x3EI+WMW/XxqYHC626rKrp8=";
         
         try {
             // Rebuild the AES key

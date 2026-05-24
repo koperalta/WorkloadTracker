@@ -17,7 +17,6 @@
         <param-name>cipherInstance</param-name>
         <param-value>AES/ECB/PKCS5Padding</param-value>
     </context-param>
-    
     <context-param>
         <param-name>mysqlDBurl</param-name>
         <param-value>jdbc:mysql://localhost:3306/workload_db?useSSL=false&amp;allowPublicKeyRetrieval=true</param-value>
@@ -34,24 +33,38 @@
         <param-name>mysqlDBdriver</param-name>
         <param-value>com.mysql.cj.jdbc.Driver</param-value>
     </context-param>
-    
     <context-param>
         <param-name>postgresqlURL</param-name>
         <param-value>jdbc:postgresql://localhost:5432/workload_audit_db</param-value>
     </context-param>
     <context-param>
         <param-name>postgresqlUsername</param-name>
-        <param-value>postgres</param-value>
+        <param-value>app</param-value>
     </context-param>
     <context-param>
         <param-name>postgresqlPassword</param-name>
-        <param-value>kino2206</param-value>
+        <param-value>app</param-value>
     </context-param>
     <context-param>
         <param-name>postgresqlDriver</param-name>
         <param-value>org.postgresql.Driver</param-value>
     </context-param>
-
+    <context-param>
+        <param-name>derbyURL</param-name>
+        <param-value>jdbc:derby://localhost:1527/identity_db</param-value>
+    </context-param>
+    <context-param>
+        <param-name>derbyUsername</param-name>
+        <param-value>app</param-value>
+    </context-param>
+    <context-param>
+        <param-name>derbyPassword</param-name>
+        <param-value>app</param-value>
+    </context-param>
+    <context-param>
+        <param-name>derbyDriver</param-name>
+        <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
+    </context-param>
     <!-- Servlets -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -79,17 +92,16 @@
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>workloadtracker.LogoutServlet</servlet-class>
+        <servlet-class>servlet.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>FetchWorkloadServlet</servlet-name>
-        <servlet-class>workloadtracker.FetchWorkloadServlet</servlet-class>
+        <servlet-class>servlet.FetchWorkloadServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>GenerateReportServlet</servlet-name>
-        <servlet-class>workloadtracker.GenerateReportServlet</servlet-class>
+        <servlet-class>servlet.GenerateReportServlet</servlet-class>
     </servlet>
-
     <!-- Mappings -->
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -111,7 +123,6 @@
         <servlet-name>GenerateReportServlet</servlet-name>
         <url-pattern>/GenerateReportServlet</url-pattern>
     </servlet-mapping>
-
     <!-- Configuration -->
     <error-page>
         <error-code>404</error-code>
