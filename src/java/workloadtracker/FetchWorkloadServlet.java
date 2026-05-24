@@ -28,7 +28,7 @@ public class FetchWorkloadServlet extends HttpServlet {
         // session.setAttribute("loggedUserId", 2); // 2 is the ID for a student in your Derby data
 
         // 1. Security Check: Ensure user is actively logged in via Derby authentication
-        HttpSession session = request.getSession(false); // Make sure to uncomment this once Lance has implemented the login logic
+        HttpSession session = request.getSession(); // Make sure to uncomment this once Lance has implemented the login logic
         if (session == null || session.getAttribute("loggedUserId") == null) {
             // Unauthorized access, redirect back to login
             response.sendRedirect("login.jsp");
