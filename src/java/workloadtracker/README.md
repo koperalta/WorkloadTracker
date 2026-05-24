@@ -1,6 +1,6 @@
 # Project Database Setup
 
-All required JDBC drivers can be found here: [JDBC JAR Files](https://drive.google.com/drive/folders/1LAMD9kSVpjJ_diRoZkC3Gy_0pQOTqU2J?usp=sharing)
+All required .jar files can be found here: [JAR Files](https://drive.google.com/drive/folders/1LAMD9kSVpjJ_diRoZkC3Gy_0pQOTqU2J?usp=sharing)
 
 ### MySQL DBMS (Core Logic)
 * **JDBC Link:** [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/)

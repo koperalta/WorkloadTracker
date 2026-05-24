@@ -1,4 +1,4 @@
--- Apache Derby Database Setup Guide (Multi-DBMS Architecture: Part 3) --
+-- Apache Derby Database Setup Guide (Multi-DBMS Architecture: Part 3)--
 
 -- ==========================================
 -- 1. Create Identity & Role Tables (Based on FAP_ERD_2.jpg)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
-    
+    <!-- Context Params -->
     <context-param>
         <param-name>pdfHeader</param-name>
         <param-value>Active Learning, Inc. - Official Workload Report</param-value>
@@ -9,7 +9,76 @@
         <param-name>pdfFooter</param-name>
         <param-value>Confidential - Generated via Student Activity and Workload Tracker</param-value>
     </context-param>
+    <context-param>
+        <param-name>secretKey</param-name>
+        <param-value>w0Rkl04Dh@$h_keY</param-value>
+    </context-param>
+    <context-param>
+        <param-name>cipherInstance</param-name>
+        <param-value>AES/ECB/PKCS5Padding</param-value>
+    </context-param>
 
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>servlet.LoginServlet</servlet-class>
+        <init-param>
+            <param-name>idenitityDBurl</param-name>
+            <param-value>jdbc:derby://localhost:1527/identity_db</param-value>
+        </init-param>
+        <init-param>
+            <param-name>idenitityDBuser</param-name>
+            <param-value>app</param-value>
+        </init-param>
+        <init-param>
+            <param-name>idenitityDBpassword</param-name>
+            <param-value>app</param-value>
+        </init-param>
+        <init-param>
+            <param-name>idenitityDBdriver</param-name>
+            <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>CaptchaServlet</servlet-name>
+        <servlet-class>servlet.CaptchaServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>workloadtracker.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FetchWorkloadServlet</servlet-name>
+        <servlet-class>workloadtracker.FetchWorkloadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GenerateReportServlet</servlet-name>
+        <servlet-class>workloadtracker.GenerateReportServlet</servlet-class>
+    </servlet>
+
+    <!-- Mappings -->
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CaptchaServlet</servlet-name>
+        <url-pattern>/CaptchaServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FetchWorkloadServlet</servlet-name>
+        <url-pattern>/FetchWorkloadServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GenerateReportServlet</servlet-name>
+        <url-pattern>/GenerateReportServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Configuration -->
     <error-page>
         <error-code>404</error-code>
         <location>/error404.jsp</location>
@@ -18,62 +87,10 @@
         <error-code>500</error-code>
         <location>/error500.jsp</location>
     </error-page>
-    <error-page>
-        <exception-type>java.lang.Exception</exception-type>
-        <location>/error500.jsp</location>
-    </error-page>
-
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
-
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>workloadtracker.LoginServlet</servlet-class> 
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/LoginServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>workloadtracker.LogoutServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/LogoutServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>FetchWorkloadServlet</servlet-name>
-        <servlet-class>workloadtracker.FetchWorkloadServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>FetchWorkloadServlet</servlet-name>
-        <url-pattern>/FetchWorkloadServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>GenerateReportServlet</servlet-name>
-        <servlet-class>workloadtracker.GenerateReportServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>GenerateReportServlet</servlet-name>
-        <url-pattern>/GenerateReportServlet</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>CaptchaServlet</servlet-name>
-        <servlet-class>workloadtracker.CaptchaServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CaptchaServlet</servlet-name>
-        <url-pattern>/CaptchaServlet</url-pattern>
-    </servlet-mapping>
-
 </web-app>

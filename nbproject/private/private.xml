@@ -3,8 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/helper/EncryptAllPasswords.java</file>
             <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/web/WEB-INF/web.xml</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/IdentityDAO.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/AuditLog.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/DBConnectionUtil.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/README.md</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/web/admin_dashboard.jsp</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/AdminDashboardServlet.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/helper/Encrypter.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/derby.md</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/web/courses.jsp</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/servlet/LoginServlet.java</file>
             <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/FetchWorkloadServlet.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/servlet/CaptchaServlet.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/postgresql.md</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/AuditDAO.java</file>
+            <file>file:/Users/kiko/NetBeansProjects/WorkloadTracker/src/java/workloadtracker/WorkloadDAO.java</file>
         </group>
     </open-files>
 </project-private>

@@ -51,4 +51,24 @@ public class IdentityDAO {
         }
         return roleName;
     }
+    
+    public int getUserIdByUsername(String username) {
+        int userId = -1;
+        String sql = "SELECT USER_ID FROM DERBY_USERS WHERE USERNAME = ?";
+
+        try (Connection conn = DBConnectionUtil.getInstance().getDerbyConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, username);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    userId = rs.getInt("USER_ID");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userId;
+    }
 }

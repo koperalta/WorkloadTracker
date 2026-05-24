@@ -7,8 +7,6 @@ DROP TABLE IF EXISTS MYSQL_SUBMISSIONS;
 DROP TABLE IF EXISTS MYSQL_STUDENT_TASKS;
 DROP TABLE IF EXISTS MYSQL_TASKS;
 DROP TABLE IF EXISTS MYSQL_TRAINING_MODULES;
-DROP TABLE IF EXISTS workloads; -- Dropping the old placeholder
-DROP TABLE IF EXISTS students;  -- Dropping the old placeholder
 
 -- ==========================================
 -- 2. Create Core Tables 
@@ -18,7 +16,6 @@ DROP TABLE IF EXISTS students;  -- Dropping the old placeholder
 CREATE TABLE MYSQL_TRAINING_MODULES (
     MODULE_ID INT AUTO_INCREMENT PRIMARY KEY,
     -- Note: ADMIN_ID is a loose foreign key to DBMS 2 (Apache Derby: DERBY_USERS).
-    -- Referential integrity must be enforced by your Java DAOs, not MySQL.
     ADMIN_ID INT NOT NULL, 
     TITLE VARCHAR(255) NOT NULL
 );
@@ -27,6 +24,8 @@ CREATE TABLE MYSQL_TRAINING_MODULES (
 CREATE TABLE MYSQL_TASKS (
     TASK_ID INT AUTO_INCREMENT PRIMARY KEY,
     MODULE_ID INT NOT NULL,
+    -- Added ADMIN_ID to match ERD and DAO requirements
+    ADMIN_ID INT NOT NULL, 
     TITLE VARCHAR(255) NOT NULL,
     FOREIGN KEY (MODULE_ID) REFERENCES MYSQL_TRAINING_MODULES(MODULE_ID) ON DELETE CASCADE
 );
@@ -35,8 +34,6 @@ CREATE TABLE MYSQL_TASKS (
 CREATE TABLE MYSQL_STUDENT_TASKS (
     ASSIGNMENT_ID INT AUTO_INCREMENT PRIMARY KEY,
     TASK_ID INT NOT NULL,
-    -- Note: USER_ID is a loose foreign key to DBMS 2 (Apache Derby: DERBY_USERS).
-    -- Referential integrity must be enforced by your Java DAOs.
     USER_ID INT NOT NULL,
     STATUS VARCHAR(50) DEFAULT 'Pending',
     FOREIGN KEY (TASK_ID) REFERENCES MYSQL_TASKS(TASK_ID) ON DELETE CASCADE
@@ -60,13 +57,13 @@ INSERT INTO MYSQL_TRAINING_MODULES (ADMIN_ID, TITLE) VALUES
 (1, 'Database Architecture Fundamentals'),
 (1, 'Java EE Cross-DBMS Integration');
 
--- Insert Tasks
-INSERT INTO MYSQL_TASKS (MODULE_ID, TITLE) VALUES 
-(1, 'Configure MySQL Connection Pool'),
-(1, 'Deploy Apache Derby IdP'),
-(2, 'Implement Multi-Database DAO Pattern');
+-- Insert Tasks (Updated to include ADMIN_ID)
+INSERT INTO MYSQL_TASKS (MODULE_ID, ADMIN_ID, TITLE) VALUES 
+(1, 1, 'Configure MySQL Connection Pool'),
+(1, 1, 'Deploy Apache Derby IdP'),
+(2, 1, 'Implement Multi-Database DAO Pattern');
 
--- Insert Student Tasks (Assigning User_IDs 2 through 5)
+-- Insert Student Tasks
 INSERT INTO MYSQL_STUDENT_TASKS (TASK_ID, USER_ID, STATUS) VALUES 
 (1, 2, 'Completed'),
 (2, 3, 'In Progress'),

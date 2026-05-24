@@ -1,7 +1,5 @@
 package workloadtracker;
 
-package workloadtracker;
-
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -11,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet(name = "AdminDashboardServlet", urlPatterns = {"/AdminDashboard"})
+@WebServlet(name = "AdminDashboardServlet", urlPatterns = {"/AdminDashboardServlet"})
 public class AdminDashboardServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -20,47 +18,47 @@ public class AdminDashboardServlet extends HttpServlet {
         // 1. Session and Security Verification
         HttpSession session = request.getSession(false);
         
-        // Check if session exists and if the user is authenticated
-        if (session == null || session.getAttribute("userRole") == null) {
+        // Look for your teammate's specific session key
+        if (session == null || session.getAttribute("loggedUserRoleId") == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp?error=unauthorized");
             return;
         }
 
-        // Enforce Strict Admin Access
-        String userRole = (String) session.getAttribute("userRole");
-        if (!userRole.equals("ADMIN")) {
-            // If a regular user tries to access this, boot them to their correct dashboard or an error page
-            response.sendRedirect(request.getContextPath() + "/FetchWorkload");
+        // Enforce Strict Admin Access based on their integer logic
+        int roleId = (int) session.getAttribute("loggedUserRoleId");
+        if (roleId == 2) {
+            // Role 2 is a student. Boot them to the workload fetcher.
+            response.sendRedirect(request.getContextPath() + "/FetchWorkloadServlet");
             return;
         }
 
-        // Retrieve the specific Admin ID from the session
-        int adminId = (int) session.getAttribute("userId");
+        // 2. ID Translation
+        // Retrieve the Integer ID directly, as LoginServlet now stores it as an Integer
+        Integer adminId = (Integer) session.getAttribute("loggedUserId");
 
         try {
-            // 2. Data Retrieval (MySQL - Business Logic & State)
-            // Retrieve modules and tasks specifically owned by this admin
+            // If you need to perform actions based on adminId, you have it as an Integer directly
+    
+            // 3. Data Retrieval (MySQL - Business Logic & State)
             WorkloadDAO workloadDAO = new WorkloadDAO();
             List<TrainingModule> adminModules = workloadDAO.getModulesByAdminId(adminId);
             List<Task> adminTasks = workloadDAO.getTasksByAdminId(adminId);
-            
-            // 3. Data Retrieval (PostgreSQL - Time-Series & Audit Logging)
-            // Retrieve recent actions performed by this admin for the dashboard ledger
+    
+            // 4. Data Retrieval (PostgreSQL - Time-Series & Audit Logging)
             AuditDAO auditDAO = new AuditDAO();
             List<AuditLog> recentLogs = auditDAO.getAuditLogsByAdminId(adminId);
 
-            // 4. Bind Data to Request Attributes
+            // 5. Bind Data to Request Attributes
             request.setAttribute("adminModules", adminModules);
             request.setAttribute("adminTasks", adminTasks);
             request.setAttribute("recentLogs", recentLogs);
             request.setAttribute("adminId", adminId);
 
-            // 5. Forward to Presentation Tier
+            // 6. Forward to Presentation Tier
             request.getRequestDispatcher("/admin_dashboard.jsp").forward(request, response);
 
         } catch (Exception e) {
-            // Phase 4 Usability Rubric: Custom error routing instead of stack traces
-            e.printStackTrace(); // Log to server console for debugging
+            e.printStackTrace();
             request.setAttribute("errorMessage", "An error occurred while loading the admin dashboard: " + e.getMessage());
             request.getRequestDispatcher("/error500.jsp").forward(request, response);
         }

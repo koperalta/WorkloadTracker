@@ -1,7 +1,5 @@
 package workloadtracker;
 
-package workloadtracker;
-
 import java.sql.Timestamp;
 
 public class AuditLog {
