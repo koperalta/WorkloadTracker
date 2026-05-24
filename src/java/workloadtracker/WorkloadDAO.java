@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
 
 public class WorkloadDAO {
     
@@ -53,5 +54,52 @@ public class WorkloadDAO {
             stmt.setInt(2, assignmentId);
             stmt.executeUpdate();
         }
+    }
+    
+    // Retrieves all training modules created by a specific admin
+    public List<TrainingModule> getModulesByAdminId(int adminId) throws SQLException, Exception {
+        List<TrainingModule> modules = new ArrayList<>();
+        String sql = "SELECT MODULE_ID, ADMIN_ID, TITLE FROM MYSQL_TRAINING_MODULES WHERE ADMIN_ID = ?";
+
+        try (Connection conn = DBConnectionUtil.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             
+            stmt.setInt(1, adminId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    TrainingModule module = new TrainingModule();
+                    module.setModuleId(rs.getInt("MODULE_ID"));
+                    // module.setAdminId(rs.getInt("ADMIN_ID")); // Uncomment if TrainingModule has this setter
+                    module.setTitle(rs.getString("TITLE"));
+                    modules.add(module);
+                }
+            }
+        }
+        return modules;
+    }
+
+    // Retrieves all tasks created by a specific admin
+    public List<Task> getTasksByAdminId(int adminId) throws SQLException, Exception {
+        List<Task> tasks = new ArrayList<>();
+        String sql = "SELECT TASK_ID, MODULE_ID, ADMIN_ID, TITLE FROM MYSQL_TASKS WHERE ADMIN_ID = ?";
+
+        try (Connection conn = DBConnectionUtil.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             
+            stmt.setInt(1, adminId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Task task = new Task();
+                    task.setTaskId(rs.getInt("TASK_ID"));
+                    task.setModuleId(rs.getInt("MODULE_ID"));
+                    // task.setAdminId(rs.getInt("ADMIN_ID")); // Uncomment if Task has this setter
+                    task.setTitle(rs.getString("TITLE"));
+                    tasks.add(task);
+                }
+            }
+        }
+        return tasks;
     }
 }
