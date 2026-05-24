@@ -17,6 +17,40 @@
         <param-name>cipherInstance</param-name>
         <param-value>AES/ECB/PKCS5Padding</param-value>
     </context-param>
+    
+    <context-param>
+        <param-name>mysqlDBurl</param-name>
+        <param-value>jdbc:mysql://localhost:3306/workload_db?useSSL=false&amp;allowPublicKeyRetrieval=true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>mysqlDBuser</param-name>
+        <param-value>app</param-value>
+    </context-param>
+    <context-param>
+        <param-name>mysqlDBpassword</param-name>
+        <param-value>app</param-value>
+    </context-param>
+    <context-param>
+        <param-name>mysqlDBdriver</param-name>
+        <param-value>com.mysql.cj.jdbc.Driver</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>postgresqlURL</param-name>
+        <param-value>jdbc:postgresql://localhost:5432/workload_audit_db</param-value>
+    </context-param>
+    <context-param>
+        <param-name>postgresqlUsername</param-name>
+        <param-value>postgres</param-value>
+    </context-param>
+    <context-param>
+        <param-name>postgresqlPassword</param-name>
+        <param-value>kino2206</param-value>
+    </context-param>
+    <context-param>
+        <param-name>postgresqlDriver</param-name>
+        <param-value>org.postgresql.Driver</param-value>
+    </context-param>
 
     <!-- Servlets -->
     <servlet>

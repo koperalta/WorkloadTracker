@@ -16,7 +16,13 @@ public class FetchWorkloadServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        workloadDAO = new WorkloadDAO();
+        try {
+            // Pass the ServletContext so the DAO can read web.xml parameters
+            workloadDAO = new WorkloadDAO(getServletContext());
+        } catch (ClassNotFoundException e) {
+            // Catch the exception if the MySQL driver fails to load
+            throw new ServletException("Failed to initialize WorkloadDAO: MySQL driver not found.", e);
+        }
     }
 
     @Override

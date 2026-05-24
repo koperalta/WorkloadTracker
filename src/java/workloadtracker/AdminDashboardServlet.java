@@ -40,18 +40,18 @@ public class AdminDashboardServlet extends HttpServlet {
             // If you need to perform actions based on adminId, you have it as an Integer directly
     
             // 3. Data Retrieval (MySQL - Business Logic & State)
-            WorkloadDAO workloadDAO = new WorkloadDAO();
+            WorkloadDAO workloadDAO = new WorkloadDAO(getServletContext());
             List<TrainingModule> adminModules = workloadDAO.getModulesByAdminId(adminId);
             List<Task> adminTasks = workloadDAO.getTasksByAdminId(adminId);
     
             // 4. Data Retrieval (PostgreSQL - Time-Series & Audit Logging)
-            AuditDAO auditDAO = new AuditDAO();
+            AuditDAO auditDAO = new AuditDAO(getServletContext());
             List<AuditLog> recentLogs = auditDAO.getAuditLogsByAdminId(adminId);
 
             // 5. Bind Data to Request Attributes
             request.setAttribute("adminModules", adminModules);
             request.setAttribute("adminTasks", adminTasks);
-            request.setAttribute("recentLogs", recentLogs);
+            request.setAttribute("auditLogsData", recentLogs);
             request.setAttribute("adminId", adminId);
 
             // 6. Forward to Presentation Tier

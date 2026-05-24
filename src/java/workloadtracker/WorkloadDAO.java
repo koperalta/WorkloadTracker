@@ -1,14 +1,35 @@
 package workloadtracker;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
+import javax.servlet.ServletContext;
 
 public class WorkloadDAO {
+    
+    private String dbUrl;
+    private String dbUser;
+    private String dbPass;
+
+    // 1. New Constructor: Captures XML parameters and loads the driver
+    public WorkloadDAO(ServletContext context) throws ClassNotFoundException {
+        this.dbUrl = context.getInitParameter("mysqlDBurl");
+        this.dbUser = context.getInitParameter("mysqlDBuser");
+        this.dbPass = context.getInitParameter("mysqlDBpassword");
+        String dbDriver = context.getInitParameter("mysqlDBdriver");
+
+        // Load the MySQL driver into memory
+        Class.forName(dbDriver);
+    }
+
+    // 2. Helper Method: Opens the connection using DriverManager
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(dbUrl, dbUser, dbPass);
+    }
     
     public List<StudentTask> getTasksForStudent(int userId) throws SQLException, Exception {
         List<StudentTask> studentTasks = new ArrayList<>();
@@ -18,7 +39,8 @@ public class WorkloadDAO {
                      "JOIN MYSQL_TASKS t ON st.TASK_ID = t.TASK_ID " +
                      "WHERE st.USER_ID = ?";
 
-        try (Connection conn = DBConnectionUtil.getInstance().getConnection();
+        // 3. Replaced DBConnectionUtil with this.getConnection()
+        try (Connection conn = this.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
              
             stmt.setInt(1, userId);
@@ -47,7 +69,7 @@ public class WorkloadDAO {
     public void updateTaskStatus(int assignmentId, String newStatus) throws SQLException, Exception {
         String sql = "UPDATE MYSQL_STUDENT_TASKS SET STATUS = ? WHERE ASSIGNMENT_ID = ?";
         
-        try (Connection conn = DBConnectionUtil.getInstance().getConnection();
+        try (Connection conn = this.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
              
             stmt.setString(1, newStatus);
@@ -61,7 +83,7 @@ public class WorkloadDAO {
         List<TrainingModule> modules = new ArrayList<>();
         String sql = "SELECT MODULE_ID, ADMIN_ID, TITLE FROM MYSQL_TRAINING_MODULES WHERE ADMIN_ID = ?";
 
-        try (Connection conn = DBConnectionUtil.getInstance().getConnection();
+        try (Connection conn = this.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
              
             stmt.setInt(1, adminId);
@@ -84,7 +106,7 @@ public class WorkloadDAO {
         List<Task> tasks = new ArrayList<>();
         String sql = "SELECT TASK_ID, MODULE_ID, ADMIN_ID, TITLE FROM MYSQL_TASKS WHERE ADMIN_ID = ?";
 
-        try (Connection conn = DBConnectionUtil.getInstance().getConnection();
+        try (Connection conn = this.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
              
             stmt.setInt(1, adminId);
