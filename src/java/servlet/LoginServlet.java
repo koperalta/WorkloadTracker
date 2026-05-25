@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
         String instance = getServletContext().getInitParameter("cipherInstance");
         String gCaptchaResponse = request.getParameter("g-recaptcha-response");
 
-        boolean captchaValid = true; /*CaptchaServlet.verify(gCaptchaResponse);*/
+        boolean captchaValid = CaptchaServlet.verify(gCaptchaResponse);
         if (!captchaValid) {
             request.setAttribute("errorMessage", "Please verify that you are not a robot.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
