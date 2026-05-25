@@ -37,7 +37,8 @@ public class WorkloadDAO {
                 + "t.MODULE_ID, t.TITLE "
                 + "FROM MYSQL_STUDENT_TASKS st "
                 + "JOIN MYSQL_TASKS t ON st.TASK_ID = t.TASK_ID "
-                + "WHERE st.USER_ID = ?";
+                + "WHERE st.USER_ID = ? "
+                + "ORDER BY t.MODULE_ID ASC, t.TASK_ID ASC";
 
         try (Connection conn = this.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -146,10 +147,12 @@ public class WorkloadDAO {
 
     public List<StudentTask> getAllStudentTasks() throws SQLException, Exception {
         List<StudentTask> studentTasks = new ArrayList<>();
-        String sql = "SELECT st.ASSIGNMENT_ID, st.TASK_ID, st.USER_ID, st.STATUS, t.TITLE "
+        String sql = "SELECT st.ASSIGNMENT_ID, st.TASK_ID, st.USER_ID, st.STATUS, "
+                + "t.MODULE_ID, t.TITLE "
                 + "FROM MYSQL_STUDENT_TASKS st "
                 + "JOIN MYSQL_TASKS t ON st.TASK_ID = t.TASK_ID "
-                + "ORDER BY st.ASSIGNMENT_ID DESC";
+                + "WHERE st.USER_ID = ? "
+                + "ORDER BY t.MODULE_ID ASC, t.TASK_ID ASC";
 
         try (Connection conn = this.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
