@@ -18,18 +18,15 @@ public class WorkloadDAO {
     private String dbUser;
     private String dbPass;
 
-    // 1. New Constructor: Captures XML parameters and loads the driver
     public WorkloadDAO(ServletContext context) throws ClassNotFoundException {
         this.dbUrl = context.getInitParameter("mysqlDBurl");
-        this.dbUser = context.getInitParameter("mysqlDBuser");
+        this.dbUser = context.getInitParameter("mysqlDBusername");
         this.dbPass = context.getInitParameter("mysqlDBpassword");
         String dbDriver = context.getInitParameter("mysqlDBdriver");
 
-        // Load the MySQL driver into memory
         Class.forName(dbDriver);
     }
 
-    // 2. Helper Method: Opens the connection using DriverManager
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(dbUrl, dbUser, dbPass);
     }
@@ -42,7 +39,6 @@ public class WorkloadDAO {
                      "JOIN MYSQL_TASKS t ON st.TASK_ID = t.TASK_ID " +
                      "WHERE st.USER_ID = ?";
 
-        // 3. Replaced DBConnectionUtil with this.getConnection()
         try (Connection conn = this.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
              
@@ -81,7 +77,6 @@ public class WorkloadDAO {
         }
     }
     
-    // Retrieves all training modules created by a specific admin
     public List<TrainingModule> getModulesByAdminId(int adminId) throws SQLException, Exception {
         List<TrainingModule> modules = new ArrayList<>();
         String sql = "SELECT MODULE_ID, ADMIN_ID, TITLE FROM MYSQL_TRAINING_MODULES WHERE ADMIN_ID = ?";
@@ -95,7 +90,6 @@ public class WorkloadDAO {
                 while (rs.next()) {
                     TrainingModule module = new TrainingModule();
                     module.setModuleId(rs.getInt("MODULE_ID"));
-                    // module.setAdminId(rs.getInt("ADMIN_ID")); // Uncomment if TrainingModule has this setter
                     module.setTitle(rs.getString("TITLE"));
                     modules.add(module);
                 }
@@ -104,7 +98,6 @@ public class WorkloadDAO {
         return modules;
     }
 
-    // Retrieves all tasks created by a specific admin
     public List<Task> getTasksByAdminId(int adminId) throws SQLException, Exception {
         List<Task> tasks = new ArrayList<>();
         String sql = "SELECT TASK_ID, MODULE_ID, ADMIN_ID, TITLE FROM MYSQL_TASKS WHERE ADMIN_ID = ?";
@@ -119,7 +112,6 @@ public class WorkloadDAO {
                     Task task = new Task();
                     task.setTaskId(rs.getInt("TASK_ID"));
                     task.setModuleId(rs.getInt("MODULE_ID"));
-                    // task.setAdminId(rs.getInt("ADMIN_ID")); // Uncomment if Task has this setter
                     task.setTitle(rs.getString("TITLE"));
                     tasks.add(task);
                 }

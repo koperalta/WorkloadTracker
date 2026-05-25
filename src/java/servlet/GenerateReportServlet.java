@@ -25,18 +25,19 @@ public class GenerateReportServlet extends HttpServlet {
         }
 
         String currentUser = (String) session.getAttribute("loggedUsername");
-        int adminId = (Integer) session.getAttribute("loggedUserId");
+        int userId = (Integer) session.getAttribute("loggedUserId");
         
         String reportType = request.getParameter("type");
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
         
-        // Constraint: Dynamically generate timestamped filename
         String fileTimestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         String fileName = "";
         
         if ("all_users".equals(reportType)) {
             fileName = "USERLIST_" + fileTimestamp + ".pdf";
+        } else if ("my_student_tasks".equals(reportType)) {
+            fileName = "MY_TASKS_" + fileTimestamp + ".pdf"; 
         } else {
             fileName = "MYRECORDS_" + fileTimestamp + ".pdf";
         }
@@ -47,9 +48,10 @@ public class GenerateReportServlet extends HttpServlet {
         try {
             if ("all_users".equals(reportType)) {
                 ReportGenerator.generateAllRecords(response.getOutputStream(), currentUser, getServletContext());
+            } else if ("my_student_tasks".equals(reportType)) {
+                ReportGenerator.generateStudentTaskReport(response.getOutputStream(), currentUser, userId, getServletContext());
             } else {
-                // Handles both "Download My Records Only" and the custom time-bound forms
-                ReportGenerator.generateTimeBoundReport(response.getOutputStream(), currentUser, adminId, startDate, endDate, getServletContext());
+                ReportGenerator.generateTimeBoundReport(response.getOutputStream(), currentUser, userId, startDate, endDate, getServletContext());
             }
         } catch (Exception e) {
             e.printStackTrace();

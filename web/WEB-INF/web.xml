@@ -22,7 +22,7 @@
         <param-value>jdbc:mysql://localhost:3306/workload_db?useSSL=false&amp;allowPublicKeyRetrieval=true</param-value>
     </context-param>
     <context-param>
-        <param-name>mysqlDBuser</param-name>
+        <param-name>mysqlDBusername</param-name>
         <param-value>app</param-value>
     </context-param>
     <context-param>

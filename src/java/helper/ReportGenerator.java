@@ -13,10 +13,8 @@ import javax.servlet.ServletContext;
 
 public class ReportGenerator {
     
-    // Generates the legacy user list (Derby)
     public static void generateAllRecords(OutputStream os, String currentUser, ServletContext context) throws Exception {
         
-        // Constraint: Landscape Mode
         Document doc = new Document(PageSize.LETTER.rotate(), 36, 36, 120, 50);
         PdfWriter write = PdfWriter.getInstance(doc, os); 
         
@@ -40,7 +38,6 @@ public class ReportGenerator {
         table.addCell(new PdfPCell(new Phrase("Username", boldFont)));
         table.addCell(new PdfPCell(new Phrase("Role", boldFont)));
         
-        // Retrieve Derby connection details from web.xml
         String url = context.getInitParameter("derbyURL");
         String user = context.getInitParameter("derbyUsername");
         String pass = context.getInitParameter("derbyPassword");
@@ -58,7 +55,6 @@ public class ReportGenerator {
                 String dbUser = rs.getString("USERNAME");
                 String dbRole = rs.getString("ROLE_NAME");
 
-                // Constraint: Put an asterisk (*) beside the logged-in admin
                 String displayUsername = dbUser;
                 if (dbUser != null && dbUser.equalsIgnoreCase(currentUser)) {
                     displayUsername += " *";
@@ -73,11 +69,9 @@ public class ReportGenerator {
         doc.close();
     }
     
-    // Generates the time-bound audit report (PostgreSQL)
     public static void generateTimeBoundReport(OutputStream os, String currentUser, int adminId, String startDate, String endDate, ServletContext context) throws Exception {
         
-        // Constraint: Landscape Mode
-        Document doc = new Document(PageSize.LETTER.rotate(), 36, 36, 60, 50);
+        Document doc = new Document(PageSize.LETTER.rotate(), 36, 36, 120, 50);
         PdfWriter write = PdfWriter.getInstance(doc, os); 
         
         String header = context.getInitParameter("pdfHeader");
@@ -101,13 +95,11 @@ public class ReportGenerator {
         table.addCell(new PdfPCell(new Phrase("Action Performed", boldFont)));
         table.addCell(new PdfPCell(new Phrase("Timestamp", boldFont)));
         
-        // Retrieve PostgreSQL connection details from web.xml
         String url = context.getInitParameter("postgresqlURL");
         String user = context.getInitParameter("postgresqlUsername");
         String pass = context.getInitParameter("postgresqlPassword");
         Class.forName(context.getInitParameter("postgresqlDriver"));
         
-        // Constraint: SQL BETWEEN clauses for time-bound isolation
         String query;
         if (startDate != null && endDate != null && !startDate.isEmpty() && !endDate.isEmpty()) {
             query = "SELECT AUDIT_ID, ACTION_TYPE, ACTION_TIMESTAMP FROM POSTGRES_AUDIT_LOGS " +
@@ -132,6 +124,65 @@ public class ReportGenerator {
                     table.addCell(new PdfPCell(new Phrase(String.valueOf(rs.getInt("AUDIT_ID")), normalFont)));
                     table.addCell(new PdfPCell(new Phrase(rs.getString("ACTION_TYPE"), normalFont)));
                     table.addCell(new PdfPCell(new Phrase(rs.getString("ACTION_TIMESTAMP"), normalFont)));
+                }
+            }
+        }
+        
+        doc.add(table);
+        doc.close();
+    }
+    
+    public static void generateStudentTaskReport(OutputStream os, String currentUser, int studentId, ServletContext context) throws Exception {
+        
+        Document doc = new Document(PageSize.LETTER.rotate(), 36, 36, 120, 50);
+        PdfWriter write = PdfWriter.getInstance(doc, os); 
+        
+        String header = context.getInitParameter("pdfHeader");
+        String footer = context.getInitParameter("pdfFooter");
+        
+        PageEventHelper eventHelper = new PageEventHelper("MY ACTIVE TRAINING TASKS", currentUser, header, footer);
+        write.setPageEvent(eventHelper);
+        doc.open();
+        
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        Font boldFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+        Font normalFont = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL);
+        
+        table.addCell(new PdfPCell(new Phrase("Module ID", boldFont)));
+        table.addCell(new PdfPCell(new Phrase("Task Title", boldFont)));
+        table.addCell(new PdfPCell(new Phrase("Current Status", boldFont)));
+        
+        String url = context.getInitParameter("mysqlDBurl");
+        String user = context.getInitParameter("mysqlDBusername");
+        String pass = context.getInitParameter("mysqlDBpassword");
+        Class.forName(context.getInitParameter("mysqlDBdriver"));
+        
+        String query = "SELECT t.MODULE_ID, t.TITLE, st.STATUS " +
+                       "FROM mysql_student_tasks st " +
+                       "JOIN mysql_tasks t ON st.TASK_ID = t.TASK_ID " +
+                       "WHERE st.USER_ID = ?";
+                       
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+             
+             ps.setInt(1, studentId);
+             
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String modId = "MOD-" + rs.getInt("MODULE_ID");
+                    String title = rs.getString("TITLE");
+                    String status = rs.getString("STATUS");
+
+                    table.addCell(new PdfPCell(new Phrase(modId, normalFont)));
+                    table.addCell(new PdfPCell(new Phrase(title, normalFont)));
+                    
+                    // Formatting the status cell based on completion
+                    PdfPCell statusCell = new PdfPCell(new Phrase(status, normalFont));
+                    if ("Completed".equalsIgnoreCase(status)) {
+                        statusCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                    }
+                    table.addCell(statusCell);
                 }
             }
         }
