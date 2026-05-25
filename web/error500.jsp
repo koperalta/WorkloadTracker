@@ -62,6 +62,16 @@
             <div class="error-content">
                 <h1 style="font-size: 90px; color: #d9534f; line-height: 1; margin-bottom: 10px; font-weight: bold;">500</h1>
                 <h2 style="color: var(--brand-navy); font-size: 26px; margin-bottom: 15px;">Internal Server Error</h2>
+                <%
+                    String error = (String) request.getAttribute("errorMessage");
+                    if (error != null) {
+                %>
+                <div style="color: red; margin-bottom: 10px;">
+                    <%= error%>
+                </div>
+                <%
+                    }
+                %>
                 <p style="color: #666; font-size: 16px; line-height: 1.6;">
                     Something went wrong on our databases. Our engineering team has been notified and is working to restore functionality.
                 </p>

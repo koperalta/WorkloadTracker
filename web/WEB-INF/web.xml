@@ -19,7 +19,7 @@
     </context-param>
     <context-param>
         <param-name>mysqlDBurl</param-name>
-        <param-value>jdbc:mysql://localhost:3306/workload_db?useSSL=false&amp;allowPublicKeyRetrieval=true</param-value>
+        <param-value>jdbc:mysql://localhost:3310/workload_db?useSSL=false&amp;allowPublicKeyRetrieval=true</param-value>
     </context-param>
     <context-param>
         <param-name>mysqlDBusername</param-name>
@@ -69,22 +69,6 @@
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>servlet.LoginServlet</servlet-class>
-        <init-param>
-            <param-name>idenitityDBurl</param-name>
-            <param-value>jdbc:derby://localhost:1527/identity_db</param-value>
-        </init-param>
-        <init-param>
-            <param-name>idenitityDBuser</param-name>
-            <param-value>app</param-value>
-        </init-param>
-        <init-param>
-            <param-name>idenitityDBpassword</param-name>
-            <param-value>app</param-value>
-        </init-param>
-        <init-param>
-            <param-name>idenitityDBdriver</param-name>
-            <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
-        </init-param>
     </servlet>
     <servlet>
         <servlet-name>CaptchaServlet</servlet-name>
@@ -102,7 +86,28 @@
         <servlet-name>GenerateReportServlet</servlet-name>
         <servlet-class>servlet.GenerateReportServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <servlet-class>servlet.AdminDashboardServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AssignmentManagementServlet</servlet-name>
+        <servlet-class>servlet.AssignmentManagementServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TaskManagementServlet</servlet-name>
+        <servlet-class>servlet.TaskManagementServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ModuleManagementServlet</servlet-name>
+        <servlet-class>servlet.ModuleManagementServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserManagementServlet</servlet-name>
+        <servlet-class>servlet.UserManagementServlet</servlet-class>
+    </servlet>
     <!-- Mappings -->
+    
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -123,6 +128,26 @@
         <servlet-name>GenerateReportServlet</servlet-name>
         <url-pattern>/GenerateReportServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <url-pattern>/AdminDashboardServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AssignmentManagementServlet</servlet-name>
+        <url-pattern>/AssignmentManagementServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TaskManagementServlet</servlet-name>
+        <url-pattern>/TaskManagementServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModuleManagementServlet</servlet-name>
+        <url-pattern>/ModuleManagementServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserManagementServlet</servlet-name>
+        <url-pattern>/UserManagementServlet</url-pattern>
+    </servlet-mapping>
     <!-- Configuration -->
     <error-page>
         <error-code>404</error-code>
@@ -135,6 +160,7 @@
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
+    
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

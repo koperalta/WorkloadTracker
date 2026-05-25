@@ -1,7 +1,5 @@
 package dao;
 
-
-
 import helper.AuditLog;
 import helper.SessionLog;
 import java.sql.Connection;
@@ -12,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.ServletContext;
 
 public class AuditDAO {
@@ -42,12 +42,12 @@ public class AuditDAO {
 
         // 3. Replaced DBConnectionUtil with this.getConnection()
         try (Connection conn = this.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, adminId);
             stmt.setString(2, actionType);
             stmt.executeUpdate();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,22 +56,27 @@ public class AuditDAO {
     // Retrieves the ledger of actions for a specific admin to display on their dashboard
     public List<AuditLog> getAuditLogsByAdminId(int adminId) {
         List<AuditLog> logs = new ArrayList<>();
-        String sql = "SELECT AUDIT_ID, ADMIN_ID, ACTION_TYPE, ACTION_TIMESTAMP " +
-                     "FROM POSTGRES_AUDIT_LOGS WHERE ADMIN_ID = ? ORDER BY ACTION_TIMESTAMP DESC";
+        String sql = "SELECT AUDIT_ID, ADMIN_ID, ACTION_TYPE, ACTION_TIMESTAMP "
+                + "FROM POSTGRES_AUDIT_LOGS WHERE ADMIN_ID = ? ORDER BY ACTION_TIMESTAMP DESC";
 
         // 3. Replaced DBConnectionUtil with this.getConnection()
         try (Connection conn = this.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, adminId);
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     AuditLog log = new AuditLog();
                     log.setAuditId(rs.getInt("AUDIT_ID"));
                     log.setAdminId(rs.getInt("ADMIN_ID"));
                     log.setActionType(rs.getString("ACTION_TYPE"));
-                    log.setActionTimestamp(rs.getTimestamp("ACTION_TIMESTAMP"));
+
+                    // If using LocalDateTime
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    LocalDateTime timestamp = rs.getTimestamp("ACTION_TIMESTAMP").toLocalDateTime();
+                    LocalDateTime cleanedTimestamp = timestamp.truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+                    log.setActionTimestamp(cleanedTimestamp.format(formatter));
                     logs.add(log);
                 }
             }
@@ -80,27 +85,27 @@ public class AuditDAO {
         }
         return logs;
     }
-    
-    public List<SessionLog> getAllSessionLogs() {
-        List<SessionLog> sessionLogs = new ArrayList<>();
-        String sql = "SELECT LOG_ID, USER_ID, LOGIN_TIME, LOGOUT_TIME " +
-                     "FROM POSTGRES_SESSION_LOGS ORDER BY LOGIN_TIME DESC";
+
+    public List<helper.AuditLog> getAllSystemAuditLogs() throws SQLException {
+        List<helper.AuditLog> logs = new ArrayList<>();
+        String sql = "SELECT AUDIT_ID, ADMIN_ID, ACTION_TYPE, ACTION_TIMESTAMP FROM POSTGRES_AUDIT_LOGS ORDER BY AUDIT_ID DESC";
 
         try (Connection conn = this.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                SessionLog log = new SessionLog();
-                log.setLogId(rs.getInt("LOG_ID"));
-                log.setUserId(rs.getInt("USER_ID"));
-                log.setLoginTime(rs.getTimestamp("LOGIN_TIME"));
-                log.setLogoutTime(rs.getTimestamp("LOGOUT_TIME"));
-                sessionLogs.add(log);
+                helper.AuditLog log = new helper.AuditLog();
+                log.setAuditId(rs.getInt("AUDIT_ID"));
+                log.setAdminId(rs.getInt("ADMIN_ID"));
+                log.setActionType(rs.getString("ACTION_TYPE"));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime timestamp = rs.getTimestamp("ACTION_TIMESTAMP").toLocalDateTime();
+                LocalDateTime cleanedTimestamp = timestamp.truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
+                log.setActionTimestamp(cleanedTimestamp.format(formatter));
+                logs.add(log);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return sessionLogs;
+        return logs;
     }
 }

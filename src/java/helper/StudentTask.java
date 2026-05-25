@@ -1,12 +1,12 @@
 package helper;
 
-import helper.Task;
 
 public class StudentTask {
     private int assignmentId;
     private int taskId;
     private int userId;
     private String status;
+    private String username;
     private Task task; // Useful for displaying task details on the JSP
 
     public StudentTask() {}
@@ -25,4 +25,8 @@ public class StudentTask {
 
     public Task getTask() { return task; }
     public void setTask(Task task) { this.task = task; }
+    
+    public String getUsername() { return username; }
+
+    public void setUsername(String username) { this.username = username; }
 }

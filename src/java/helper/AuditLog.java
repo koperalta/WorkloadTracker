@@ -1,12 +1,11 @@
 package helper;
 
-import java.sql.Timestamp;
 
 public class AuditLog {
     private int auditId;
     private int adminId;
     private String actionType;
-    private Timestamp actionTimestamp;
+    private String actionTimestamp;
 
     // Getters and Setters
     public int getAuditId() { return auditId; }
@@ -18,6 +17,6 @@ public class AuditLog {
     public String getActionType() { return actionType; }
     public void setActionType(String actionType) { this.actionType = actionType; }
 
-    public Timestamp getActionTimestamp() { return actionTimestamp; }
-    public void setActionTimestamp(Timestamp actionTimestamp) { this.actionTimestamp = actionTimestamp; }
+    public String getActionTimestamp() { return actionTimestamp; }
+    public void setActionTimestamp(String actionTimestamp) { this.actionTimestamp = actionTimestamp; }
 }

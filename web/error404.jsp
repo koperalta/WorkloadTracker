@@ -62,6 +62,16 @@
             <div class="error-content">
                 <h1 style="font-size: 90px; color: var(--brand-orange); line-height: 1; margin-bottom: 10px; font-weight: bold;">404</h1>
                 <h2 style="color: var(--brand-navy); font-size: 26px; margin-bottom: 15px;">Oops! We cannot find that page.</h2>
+                <%
+                    String error = (String) request.getAttribute("errorMessage");
+                    if (error != null) {
+                %>
+                <div style="color: red; margin-bottom: 10px;">
+                    <%= error%>
+                </div>
+                <%
+                    }
+                %>
                 <p style="color: #666; font-size: 16px; line-height: 1.6;">
                     The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
                 </p>
